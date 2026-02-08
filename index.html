@@ -10,31 +10,217 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
+    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ff9a9e);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
     text-align: center;
     color: white;
     overflow-x: hidden;
 }
 
-.container {
-    padding: 20px;
-    margin-top: 30px;
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
 }
 
+.container {
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* 🌟 Glowing Title */
 h1 {
     font-size: 28px;
+    text-shadow: 0 0 10px #fff, 0 0 20px #ff4d6d;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #fff; }
+    to { text-shadow: 0 0 20px #ff4d6d, 0 0 30px #ff4d6d; }
 }
 
 p {
     font-size: 18px;
 }
 
-/* ✅ FIXED IMAGE SIZE FOR MOBILE */
+/* 📷 Smaller Image */
 img {
-    width: 65%;
-    max-width: 260px;
+    width: 70%;
+    max-width: 220px;
     height: auto;
     border-radius: 20px;
+    margin: 15px 0;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 30px;
+    background-color: #ff4d6d;
+    color: white;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#message {
+    display: none;
+    font-size: 22px;
+    margin-top: 15px;
+}
+
+/* Floating hearts */
+.heart {
+    position: fixed;
+    bottom: -10px;
+    font-size: 20px;
+    animation: floatUp 6s linear infinite;
+    color: #ff4d6d;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+/* 🌹 Falling petals */
+.petal {
+    position: fixed;
+    top: -10px;
+    font-size: 18px;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    to { transform: translateY(110vh) rotate(360deg); }
+}
+
+/* Music button */
+.music-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: none;
+    background: #ff4d6d;
+    color: white;
+    z-index: 9999;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Hey Babe ❤️</h1>
+    <p>You make my world brighter every single day.</p>
+
+    <img src="our-photo.jpg.jpg" alt="Us">
+
+    <p id="typeText"></p>
+
+    <div>
+        <button class="btn" onclick="acceptLove()">YES 💖</button>
+        <button class="btn" onclick="acceptLove()">FOREVER 💍</button>
+    </div>
+
+    <div id="message">You just made me the happiest person alive ❤️✨</div>
+</div>
+
+<audio id="bgMusic" loop>
+    <source src="love-song.mp3" type="audio/mpeg">
+</audio>
+
+<button class="music-btn" onclick="startMusic()">Tap here ❤️</button>
+
+<script>
+// Start music
+function startMusic() {
+    document.getElementById("bgMusic").play();
+}
+
+// Typewriter text
+const text = "Every moment with you feels like a beautiful dream I never want to wake up from ❤️";
+let i = 0;
+function typeWriter() {
+    if (i < text.length) {
+        document.getElementById("typeText").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 50);
+    }
+}
+typeWriter();
+
+// When she clicks YES
+function acceptLove() {
+    document.getElementById("message").style.display = "block";
+    createHearts();
+    startFireworks();
+    navigator.vibrate(200);
+}
+
+// Hearts
+function createHearts() {
+    for (let i = 0; i < 20; i++) {
+        let heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }
+}
+
+// Fireworks sparkles
+function startFireworks() {
+    for (let i = 0; i < 30; i++) {
+        let spark = document.createElement("div");
+        spark.innerHTML = "✨";
+        spark.style.position = "fixed";
+        spark.style.left = Math.random() * 100 + "vw";
+        spark.style.top = Math.random() * 100 + "vh";
+        spark.style.fontSize = "20px";
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 2000);
+    }
+}
+
+// Falling petals
+setInterval(() => {
+    let petal = document.createElement("div");
+    petal.className = "petal";
+    petal.innerHTML = "🌹";
+    petal.style.left = Math.random() * 100 + "vw";
+    petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
+    document.body.appendChild(petal);
+    setTimeout(() => petal.remove(), 10000);
+}, 500);
+
+// Heart cursor trail
+document.addEventListener("mousemove", function(e) {
+    let heart = document.createElement("div");
+    heart.innerHTML = "💖";
+    heart.style.position = "fixed";
+    heart.style.left = e.clientX + "px";
+    heart.style.top = e.clientY + "px";
+    heart.style.fontSize = "14px";
+    heart.style.pointerEvents = "none";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 800);
+});
+</script>
+
+</body>
+</html>
+border-radius: 20px;
     margin: 15px 0;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }

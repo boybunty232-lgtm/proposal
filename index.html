@@ -6,9 +6,7 @@
 <title>Sagar ❤️ Mayu</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -18,6 +16,7 @@ body {
     animation: gradientBG 12s ease infinite;
     text-align: center;
     color: white;
+    overflow-x: hidden;
 }
 
 @keyframes gradientBG {
@@ -27,40 +26,31 @@ body {
 }
 
 .container {
-    padding: 25px 15px 120px; /* extra bottom space so buttons don’t overlap */
+    padding: 25px 15px 120px;
     max-width: 420px;
     margin: auto;
 }
 
 h1 {
     font-size: 26px;
-    margin-bottom: 10px;
     text-shadow: 0 0 10px #fff, 0 0 20px #ff4d6d;
 }
 
-p {
-    font-size: 17px;
-    line-height: 1.5;
-}
-
-/* ✅ Proper mobile image size */
 img {
     width: 60%;
     max-width: 180px;
-    height: auto;
     border-radius: 18px;
     margin: 18px 0;
     box-shadow: 0 0 20px rgba(0,0,0,0.35);
 }
 
-/* Buttons container */
 .button-group {
     margin-top: 15px;
+    position: relative;
+    height: 120px;
 }
 
-/* Love buttons */
 .btn {
-    display: inline-block;
     width: 130px;
     padding: 12px;
     margin: 8px;
@@ -69,9 +59,13 @@ img {
     border-radius: 30px;
     background-color: #ff4d6d;
     color: white;
+    cursor: pointer;
 }
 
-/* Music button fixed bottom */
+#noBtn {
+    position: absolute;
+}
+
 .music-btn {
     position: fixed;
     bottom: 18px;
@@ -86,39 +80,55 @@ img {
     z-index: 1000;
 }
 
-/* Floating hearts */
 .heart {
     position: fixed;
     bottom: -10px;
     font-size: 20px;
     animation: floatUp 6s linear infinite;
 }
-
 @keyframes floatUp {
     100% { transform: translateY(-100vh); opacity: 0; }
 }
 
-/* Final screen */
 #finalScreen {
     position: fixed;
     inset: 0;
-    background: rgba(255, 77, 109, 0.96);
+    background: radial-gradient(circle, #ff4d6d, #c9184a);
     display: none;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 20px;
+    animation: fadeIn 1.5s ease forwards;
 }
 
-#finalScreen h2 {
-    font-size: 28px;
+.love-card {
+    background: white;
+    color: #c9184a;
+    padding: 25px;
+    border-radius: 20px;
+    max-width: 320px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    animation: popIn 0.8s ease;
 }
+
+.back-btn {
+    margin-top: 15px;
+    padding: 10px 18px;
+    border-radius: 20px;
+    border: none;
+    background: #ff4d6d;
+    color: white;
+}
+
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+@keyframes popIn { from {transform: scale(0.6);} to {transform: scale(1);} }
 </style>
 </head>
 
 <body>
 
-<div class="container" id="mainContent">
+<div class="container">
     <h1>Sagar ❤️ Mayu</h1>
     <p>Mayu, you make my world brighter every single day.</p>
 
@@ -126,14 +136,18 @@ img {
 
     <p id="typeText"></p>
 
-    <div class="button-group">
+    <div class="button-group" id="btnArea">
         <button class="btn" onclick="acceptLove()">YES 💖</button>
-        <button class="btn" onclick="acceptLove()">FOREVER 💍</button>
+        <button class="btn" id="noBtn">NO 🙈</button>
     </div>
 </div>
 
 <div id="finalScreen">
-    <h2>Sagar ❤️ Mayu — Forever Starts Now 💍✨</h2>
+    <div class="love-card">
+        <h2>She Said YES! 💍❤️</h2>
+        <p>Sagar ❤️ Mayu — A love story that lasts forever ✨</p>
+        <button class="back-btn" onclick="goBack()">Go Back</button>
+    </div>
 </div>
 
 <audio id="bgMusic" loop>
@@ -159,10 +173,13 @@ function typeWriter() {
 typeWriter();
 
 function acceptLove() {
-    document.getElementById("mainContent").style.display = "none";
     document.getElementById("finalScreen").style.display = "flex";
     createHearts();
     if (navigator.vibrate) navigator.vibrate(200);
+}
+
+function goBack() {
+    document.getElementById("finalScreen").style.display = "none";
 }
 
 function createHearts() {
@@ -174,6 +191,37 @@ function createHearts() {
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 6000);
     }
+}
+
+/* RUNAWAY NO BUTTON */
+const noBtn = document.getElementById("noBtn");
+const btnArea = document.getElementById("btnArea");
+
+const messages = [
+    "Are you sure? 😜",
+    "Think again! 💭",
+    "You can't say no 😂",
+    "Nice try 😏",
+    "Destiny says YES 💖",
+    "Button not working 🤭"
+];
+
+noBtn.addEventListener("mouseover", moveButton);
+noBtn.addEventListener("click", moveButton);
+
+function moveButton() {
+    const areaRect = btnArea.getBoundingClientRect();
+    const maxX = areaRect.width - noBtn.offsetWidth;
+    const maxY = areaRect.height - noBtn.offsetHeight;
+
+    const randX = Math.random() * maxX;
+    const randY = Math.random() * maxY;
+
+    noBtn.style.left = randX + "px";
+    noBtn.style.top = randY + "px";
+
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+    noBtn.innerText = msg;
 }
 </script>
 

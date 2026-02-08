@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Babe ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.card {
+    background: rgba(0,0,0,0.3);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    max-width: 360px;
+    position: relative;
+    z-index: 2;
+    display: none;
+}
+
+img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.yes { background-color: #4CAF50; color: white; }
+.no  { background-color: #f44336; color: white; position: absolute; }
+
+.heart {
+    position: fixed;
+    color: red;
+    font-size: 20px;
+    animation: floatUp 4s linear infinite;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-600px); opacity: 0; }
+}
+
+/* Countdown */
+#countdown {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+/* Fireworks */
+.firework {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    background: yellow;
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(15); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<audio autoplay loop>
+    <source src="love-song.mp3" type="audio/mpeg">
+</audio>
+
+<div id="countdown">3</div>
+
+<div class="card" id="proposalCard">
+    <img src="our-photo.jpg" alt="Our Photo">
+    <h1>Hey Babe ❤️</h1>
+    <p id="typedText"></p>
+    <h2>💍 Will you be mine forever? 💍</h2>
+
+    <button class="yes" onclick="sayYes()">YES 💖</button>
+    <button class="no" onmouseover="moveNo()">NO 😜</button>
+
+    <div style="margin-top:10px;font-size:14px;">
+        — From Sagar, who loves you more every day ❤️
+    </div>
+</div>
+
+<script>
+// Countdown
+let count = 3;
+const countdownEl = document.getElementById("countdown");
+const card = document.getElementById("proposalCard");
+
+const countdownInterval = setInterval(() => {
+    count--;
+    if (count === 0) {
+        clearInterval(countdownInterval);
+        countdownEl.style.display = "none";
+        card.style.display = "block";
+        typeText();
+    } else {
+        countdownEl.textContent = count;
+    }
+}, 1000);
+
+// Typing effect
+const message = "Every moment with you feels magical. Your smile is my favorite thing in the world, Babe…";
+let i = 0;
+function typeText() {
+    const typed = document.getElementById("typedText");
+    const typing = setInterval(() => {
+        typed.textContent += message.charAt(i);
+        i++;
+        if (i >= message.length) clearInterval(typing);
+    }, 40);
+}
+
+// Move NO button
+function moveNo() {
+    const btn = document.querySelector('.no');
+    btn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+    btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+}
+
+// YES clicked
+function sayYes() {
+    alert("You just made me the happiest person alive, Babe! ❤️🥰");
+    createHearts();
+    startFireworks();
+}
+
+// Floating hearts
+function createHearts() {
+    setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+    }, 300);
+}
+
+// Fireworks
+function startFireworks() {
+    setInterval(() => {
+        const fw = document.createElement("div");
+        fw.classList.add("firework");
+        fw.style.left = Math.random() * window.innerWidth + "px";
+        fw.style.top = Math.random() * window.innerHeight + "px";
+        document.body.appendChild(fw);
+        setTimeout(() => fw.remove(), 1000);
+    }, 500);
+}
+</script>
+
+</body>
+</html>

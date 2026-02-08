@@ -16,34 +16,24 @@ body {
     overflow-x: hidden;
 }
 
-/* Sparkle stars background */
-body::before {
-    content: "";
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: url('https://i.ibb.co/4f7zJkQ/stars.png');
-    opacity: 0.35;
-    z-index: -1;
-}
-
 .container {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
     padding: 20px;
+    margin-top: 30px;
 }
 
 h1 {
-    font-size: 32px;
+    font-size: 28px;
 }
 
 p {
     font-size: 18px;
 }
 
+/* ✅ FIXED IMAGE SIZE FOR MOBILE */
 img {
-    width: 220px;
+    width: 85%;
+    max-width: 260px;
+    height: auto;
     border-radius: 20px;
     margin: 15px 0;
     box-shadow: 0 0 20px rgba(0,0,0,0.3);
@@ -103,22 +93,18 @@ img {
     <h1>Hey Babe ❤️</h1>
     <p>From the moment you came into my life, everything became more beautiful.</p>
 
-    <img src="our-photo.jpg.jpg" alt="Us">
+    <img src="photo.jpg" alt="Us">
 
     <p id="typeText"></p>
 
     <button class="propose-btn" onclick="showMessage()">Will you be mine forever? 💍</button>
 
     <div id="message">I love you sooo much ❤️✨</div>
-
-    <video id="surpriseVideo" width="250" style="display:none; margin-top:15px;" controls>
-        <source src="video.mp4" type="video/mp4">
-    </video>
 </div>
 
 <!-- Music -->
 <audio id="bgMusic" loop>
-    <source src="love-song.mp3" type="audio/mpeg">
+    <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <button class="music-btn" onclick="startMusic()">Tap here ❤️</button>
@@ -144,7 +130,6 @@ typeWriter();
 // 💖 Show message + effects
 function showMessage() {
     document.getElementById("message").style.display = "block";
-    document.getElementById("surpriseVideo").style.display = "block";
     createHearts();
     startFireworks();
     setTimeout(() => {

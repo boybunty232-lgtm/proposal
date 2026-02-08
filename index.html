@@ -6,16 +6,18 @@
 <title>Sagar ❤️ Mayu</title>
 
 <style>
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    padding: 0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #ffdde1);
     background-size: 400% 400%;
     animation: gradientBG 12s ease infinite;
     text-align: center;
     color: white;
-    overflow-x: hidden;
 }
 
 @keyframes gradientBG {
@@ -25,46 +27,63 @@ body {
 }
 
 .container {
-    padding: 20px;
-    margin-top: 20px;
+    padding: 25px 15px 120px; /* extra bottom space so buttons don’t overlap */
+    max-width: 420px;
+    margin: auto;
 }
 
 h1 {
-    font-size: 30px;
+    font-size: 26px;
+    margin-bottom: 10px;
     text-shadow: 0 0 10px #fff, 0 0 20px #ff4d6d;
 }
 
-img {
-    width: 65%;
-    max-width: 200px;
-    border-radius: 20px;
-    margin: 15px 0;
-    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+p {
+    font-size: 17px;
+    line-height: 1.5;
 }
 
+/* ✅ Proper mobile image size */
+img {
+    width: 60%;
+    max-width: 180px;
+    height: auto;
+    border-radius: 18px;
+    margin: 18px 0;
+    box-shadow: 0 0 20px rgba(0,0,0,0.35);
+}
+
+/* Buttons container */
+.button-group {
+    margin-top: 15px;
+}
+
+/* Love buttons */
 .btn {
-    padding: 12px 25px;
-    font-size: 18px;
+    display: inline-block;
+    width: 130px;
+    padding: 12px;
+    margin: 8px;
+    font-size: 16px;
     border: none;
     border-radius: 30px;
     background-color: #ff4d6d;
     color: white;
-    cursor: pointer;
-    margin: 10px;
 }
 
+/* Music button fixed bottom */
 .music-btn {
     position: fixed;
-    bottom: 20px;
+    bottom: 18px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 12px 20px;
-    font-size: 16px;
+    padding: 12px 22px;
+    font-size: 15px;
     border-radius: 25px;
     border: none;
     background: #ff4d6d;
     color: white;
-    z-index: 9999;
+    z-index: 1000;
 }
 
 /* Floating hearts */
@@ -79,29 +98,20 @@ img {
     100% { transform: translateY(-100vh); opacity: 0; }
 }
 
-/* FINAL LOVE SCREEN */
+/* Final screen */
 #finalScreen {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 77, 109, 0.95);
+    inset: 0;
+    background: rgba(255, 77, 109, 0.96);
     display: none;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 20px;
-    animation: fadeIn 2s forwards;
 }
 
 #finalScreen h2 {
-    font-size: 32px;
-}
-
-@keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
+    font-size: 28px;
 }
 </style>
 </head>
@@ -116,13 +126,12 @@ img {
 
     <p id="typeText"></p>
 
-    <div>
+    <div class="button-group">
         <button class="btn" onclick="acceptLove()">YES 💖</button>
         <button class="btn" onclick="acceptLove()">FOREVER 💍</button>
     </div>
 </div>
 
-<!-- FINAL SCREEN -->
 <div id="finalScreen">
     <h2>Sagar ❤️ Mayu — Forever Starts Now 💍✨</h2>
 </div>
@@ -153,7 +162,7 @@ function acceptLove() {
     document.getElementById("mainContent").style.display = "none";
     document.getElementById("finalScreen").style.display = "flex";
     createHearts();
-    navigator.vibrate(200);
+    if (navigator.vibrate) navigator.vibrate(200);
 }
 
 function createHearts() {

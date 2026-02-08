@@ -8,173 +8,189 @@
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
     text-align: center;
     color: white;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
-.card {
-    background: rgba(0,0,0,0.3);
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    max-width: 360px;
+/* Sparkle stars background */
+body::before {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: url('https://i.ibb.co/4f7zJkQ/stars.png');
+    opacity: 0.35;
+    z-index: -1;
+}
+
+.container {
     position: relative;
-    z-index: 2;
-    display: none;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 20px;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+p {
+    font-size: 18px;
 }
 
 img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid white;
-    margin-bottom: 10px;
+    width: 220px;
+    border-radius: 20px;
+    margin: 15px 0;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-button {
-    padding: 12px 20px;
-    font-size: 16px;
+.propose-btn {
+    padding: 12px 25px;
+    font-size: 18px;
     border: none;
-    border-radius: 25px;
+    border-radius: 30px;
+    background-color: #ff4d6d;
+    color: white;
     cursor: pointer;
-    margin: 10px;
+    margin-top: 15px;
 }
 
-.yes { background-color: #4CAF50; color: white; }
-.no  { background-color: #f44336; color: white; position: absolute; }
+#message {
+    display: none;
+    font-size: 22px;
+    margin-top: 15px;
+}
 
+/* Floating hearts */
 .heart {
     position: fixed;
-    color: red;
+    bottom: -10px;
     font-size: 20px;
-    animation: floatUp 4s linear infinite;
+    animation: floatUp 6s linear infinite;
+    color: #ff4d6d;
 }
 
 @keyframes floatUp {
     0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-600px); opacity: 0; }
+    100% { transform: translateY(-100vh); opacity: 0; }
 }
 
-/* Countdown */
-#countdown {
-    font-size: 60px;
-    font-weight: bold;
-}
-
-/* Fireworks */
-.firework {
+/* Music button */
+.music-btn {
     position: fixed;
-    width: 5px;
-    height: 5px;
-    background: yellow;
-    border-radius: 50%;
-    animation: explode 1s ease-out forwards;
-}
-
-@keyframes explode {
-    from { transform: scale(1); opacity: 1; }
-    to { transform: scale(15); opacity: 0; }
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: none;
+    background: #ff4d6d;
+    color: white;
+    z-index: 9999;
 }
 </style>
 </head>
 
 <body>
 
-<audio autoplay loop>
+<div class="container">
+    <h1>Hey Babe ❤️</h1>
+    <p>From the moment you came into my life, everything became more beautiful.</p>
+
+    <img src="our-photo.jpg.jpg" alt="Us">
+
+    <p id="typeText"></p>
+
+    <button class="propose-btn" onclick="showMessage()">Will you be mine forever? 💍</button>
+
+    <div id="message">I love you sooo much ❤️✨</div>
+
+    <video id="surpriseVideo" width="250" style="display:none; margin-top:15px;" controls>
+        <source src="video.mp4" type="video/mp4">
+    </video>
+</div>
+
+<!-- Music -->
+<audio id="bgMusic" loop>
     <source src="love-song.mp3" type="audio/mpeg">
 </audio>
 
-<div id="countdown">3</div>
-
-<div class="card" id="proposalCard">
-    <img src="our-photo.jpg.jpg" alt="Our Photo">
-    <h1>Hey Babe ❤️</h1>
-    <p id="typedText"></p>
-    <h2>💍 Will you be mine forever? 💍</h2>
-
-    <button class="yes" onclick="sayYes()">YES 💖</button>
-    <button class="no" onmouseover="moveNo()">NO 😜</button>
-
-    <div style="margin-top:10px;font-size:14px;">
-        — From Sagar, who loves you more every day ❤️
-    </div>
-</div>
+<button class="music-btn" onclick="startMusic()">Tap here ❤️</button>
 
 <script>
-// Countdown
-let count = 3;
-const countdownEl = document.getElementById("countdown");
-const card = document.getElementById("proposalCard");
+// 🎵 Start music
+function startMusic() {
+    document.getElementById("bgMusic").play();
+}
 
-const countdownInterval = setInterval(() => {
-    count--;
-    if (count === 0) {
-        clearInterval(countdownInterval);
-        countdownEl.style.display = "none";
-        card.style.display = "block";
-        typeText();
-    } else {
-        countdownEl.textContent = count;
-    }
-}, 1000);
-
-// Typing effect
-const message = "Every moment with you feels magical. Your smile is my favorite thing in the world, Babe…";
+// 💌 Typewriter effect
+const text = "Every moment with you feels like a beautiful dream I never want to wake up from ❤️";
 let i = 0;
-function typeText() {
-    const typed = document.getElementById("typedText");
-    const typing = setInterval(() => {
-        typed.textContent += message.charAt(i);
+function typeWriter() {
+    if (i < text.length) {
+        document.getElementById("typeText").innerHTML += text.charAt(i);
         i++;
-        if (i >= message.length) clearInterval(typing);
-    }, 40);
+        setTimeout(typeWriter, 50);
+    }
 }
+typeWriter();
 
-// Move NO button
-function moveNo() {
-    const btn = document.querySelector('.no');
-    btn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
-    btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
-}
-
-// YES clicked
-function sayYes() {
-    alert("You just made me the happiest person alive, Babe! ❤️🥰");
+// 💖 Show message + effects
+function showMessage() {
+    document.getElementById("message").style.display = "block";
+    document.getElementById("surpriseVideo").style.display = "block";
     createHearts();
     startFireworks();
+    setTimeout(() => {
+        alert("You are the best thing that ever happened to me ❤️");
+    }, 1500);
 }
 
-// Floating hearts
+// 💕 Floating hearts
 function createHearts() {
-    setInterval(() => {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
+    for (let i = 0; i < 20; i++) {
+        let heart = document.createElement("div");
+        heart.className = "heart";
         heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
         document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 4000);
-    }, 300);
+        setTimeout(() => heart.remove(), 6000);
+    }
 }
 
-// Fireworks
+// ✨ Fireworks
 function startFireworks() {
-    setInterval(() => {
-        const fw = document.createElement("div");
-        fw.classList.add("firework");
-        fw.style.left = Math.random() * window.innerWidth + "px";
-        fw.style.top = Math.random() * window.innerHeight + "px";
-        document.body.appendChild(fw);
-        setTimeout(() => fw.remove(), 1000);
-    }, 500);
+    for (let i = 0; i < 30; i++) {
+        let spark = document.createElement("div");
+        spark.innerHTML = "✨";
+        spark.style.position = "fixed";
+        spark.style.left = Math.random() * 100 + "vw";
+        spark.style.top = Math.random() * 100 + "vh";
+        spark.style.fontSize = "20px";
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 2000);
+    }
 }
+
+// 💞 Heart cursor trail
+document.addEventListener("mousemove", function(e) {
+    let heart = document.createElement("div");
+    heart.innerHTML = "💖";
+    heart.style.position = "fixed";
+    heart.style.left = e.clientX + "px";
+    heart.style.top = e.clientY + "px";
+    heart.style.fontSize = "14px";
+    heart.style.pointerEvents = "none";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 800);
+});
 </script>
 
 </body>

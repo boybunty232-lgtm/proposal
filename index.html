@@ -36,19 +36,16 @@ h1 {
     text-shadow: 0 0 10px #fff, 0 0 25px #ff69b4;
 }
 
-/* Teddy */
-.teddy {
-    width: 65%;
-    max-width: 200px;
-    margin: 20px 0;
-    cursor: pointer;
-    animation: teddyBounce 3s infinite ease-in-out;
-    filter: drop-shadow(0 0 20px rgba(0,0,0,0.3));
+/* Big Teddy */
+.main-teddy {
+    width: 60%;
+    max-width: 190px;
+    margin: 15px 0;
+    animation: bounce 3s infinite ease-in-out;
 }
-
-@keyframes teddyBounce {
+@keyframes bounce {
     0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-14px); }
+    50% { transform: translateY(-12px); }
 }
 
 /* Message cards */
@@ -63,26 +60,52 @@ h1 {
     transform: translateY(20px);
     transition: all 0.8s ease;
 }
-
 .card.show {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* Surprise box */
-.surprise {
-    display: none;
-    margin-top: 20px;
-    font-size: 18px;
-    animation: fadeIn 1.2s ease forwards;
+/* 🧸 Hug Animation Area */
+.hug-area {
+    position: relative;
+    height: 140px;
+    margin-top: 30px;
 }
 
-@keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
+/* Small teddies */
+.teddy-left, .teddy-right {
+    position: absolute;
+    width: 70px;
+    top: 30px;
 }
 
-/* Floating items */
+.teddy-left {
+    left: -80px;
+    animation: moveRight 4s forwards ease-in-out;
+}
+
+.teddy-right {
+    right: -80px;
+    animation: moveLeft 4s forwards ease-in-out;
+}
+
+@keyframes moveRight {
+    to { left: 38%; }
+}
+@keyframes moveLeft {
+    to { right: 38%; }
+}
+
+/* Hug effect */
+.hug {
+    animation: hugBounce 1s infinite alternate ease-in-out;
+}
+@keyframes hugBounce {
+    from { transform: scale(1); }
+    to { transform: scale(1.15); }
+}
+
+/* Floating hearts */
 .float {
     position: fixed;
     bottom: -20px;
@@ -113,17 +136,18 @@ h1 {
 <body>
 
 <div class="container">
-    <h1>Happy Teddy Day Babe 🧸💖</h1>
+    <h1>Happy Teddy Day Mayu 🧸💖</h1>
 
-    <!-- Teddy image -->
-    <img src="teddy.jpg" alt="Cute Teddy" class="teddy" onclick="showSurprise()">
+    <img src="teddy.jpg" class="main-teddy" alt="Cute Teddy">
 
-    <div class="card" id="msg1">This teddy is soft… but not softer than my feelings for you 💕</div>
-    <div class="card" id="msg2">Whenever you hug a teddy, imagine it’s me hugging you tight 🧸🤗</div>
-    <div class="card" id="msg3">You make my world warmer, happier, and full of love 💖</div>
+    <div class="card" id="msg1">This teddy is cute… but not as cute as your smile 💕</div>
+    <div class="card" id="msg2">If I were a teddy, I’d never leave your arms 🧸🤗</div>
+    <div class="card" id="msg3">Sending you the warmest Teddy Day hug ever ❤️</div>
 
-    <div class="surprise" id="surpriseBox">
-        🎁 Surprise Hug Loaded… Sending virtual teddy hug to Mayu from Sagar 🤍🧸
+    <!-- Hug animation -->
+    <div class="hug-area">
+        <img src="teddy.jpg" class="teddy-left" id="leftTeddy">
+        <img src="teddy.jpg" class="teddy-right" id="rightTeddy">
     </div>
 </div>
 
@@ -143,13 +167,14 @@ setTimeout(() => document.getElementById("msg1").classList.add("show"), 800);
 setTimeout(() => document.getElementById("msg2").classList.add("show"), 2200);
 setTimeout(() => document.getElementById("msg3").classList.add("show"), 3600);
 
-/* Teddy click surprise */
-function showSurprise() {
-    document.getElementById("surpriseBox").style.display = "block";
+/* After teddies meet, make them hug + hearts burst */
+setTimeout(() => {
+    document.getElementById("leftTeddy").classList.add("hug");
+    document.getElementById("rightTeddy").classList.add("hug");
     createHeartsBurst();
-}
+}, 4200);
 
-/* Floating hearts & teddies */
+/* Floating cute items */
 function createFloat() {
     const items = ["🧸","💖","✨","💕"];
     let el = document.createElement("div");
@@ -162,7 +187,7 @@ function createFloat() {
 }
 setInterval(createFloat, 700);
 
-/* Burst effect on teddy tap */
+/* Heart burst */
 function createHeartsBurst() {
     for (let i = 0; i < 25; i++) {
         let heart = document.createElement("div");

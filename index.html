@@ -13,73 +13,82 @@ body {
     font-family: 'Segoe UI', sans-serif;
     text-align: center;
     color: white;
-    background: linear-gradient(-45deg, #ffb6c1, #ffc0cb, #ffe4e1);
-    background-size: 400% 400%;
-    animation: gradientBG 12s ease infinite;
     overflow-x: hidden;
+    background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fad0c4, #ffd1ff);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
 }
 
-@keyframes gradientBG {
+@keyframes gradientMove {
     0% {background-position: 0% 50%;}
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
 }
 
 .container {
-    padding: 25px 15px 120px;
+    padding: 30px 15px 140px;
     max-width: 420px;
     margin: auto;
 }
 
 h1 {
     font-size: 28px;
-    margin-bottom: 10px;
-    text-shadow: 0 0 10px #fff, 0 0 20px #ff69b4;
+    text-shadow: 0 0 10px #fff, 0 0 25px #ff69b4;
 }
 
-p {
-    font-size: 17px;
-    line-height: 1.6;
-}
-
-/* Teddy Image */
+/* Teddy */
 .teddy {
     width: 65%;
     max-width: 200px;
     margin: 20px 0;
-    animation: bounce 3s infinite ease-in-out;
-    filter: drop-shadow(0 0 15px rgba(0,0,0,0.3));
+    cursor: pointer;
+    animation: teddyBounce 3s infinite ease-in-out;
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.3));
 }
 
-@keyframes bounce {
+@keyframes teddyBounce {
     0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+    50% { transform: translateY(-14px); }
 }
 
-/* Message Card */
-.love-card {
+/* Message cards */
+.card {
     background: rgba(255,255,255,0.95);
     color: #d63384;
-    padding: 20px;
+    padding: 18px;
     border-radius: 18px;
     margin-top: 15px;
     box-shadow: 0 0 25px rgba(0,0,0,0.2);
-    animation: fadeIn 2s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+}
+
+.card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Surprise box */
+.surprise {
+    display: none;
+    margin-top: 20px;
+    font-size: 18px;
+    animation: fadeIn 1.2s ease forwards;
 }
 
 @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
+    from {opacity: 0;}
+    to {opacity: 1;}
 }
 
-/* Floating hearts/teddies */
+/* Floating items */
 .float {
     position: fixed;
     bottom: -20px;
     font-size: 22px;
     animation: floatUp 7s linear infinite;
 }
-
 @keyframes floatUp {
     100% { transform: translateY(-110vh); opacity: 0; }
 }
@@ -104,18 +113,22 @@ p {
 <body>
 
 <div class="container">
-    <h1>Happy Teddy Day Mayu 🧸💖</h1>
+    <h1>Happy Teddy Day Babe 🧸💖</h1>
 
-    <!-- Use a teddy image file named teddy.jpg -->
-    <img src="teddy.jpg" alt="Cute Teddy" class="teddy">
+    <!-- Teddy image -->
+    <img src="teddy.jpg" alt="Cute Teddy" class="teddy" onclick="showSurprise()">
 
-    <div class="love-card">
-        <p id="typeText"></p>
+    <div class="card" id="msg1">This teddy is soft… but not softer than my feelings for you 💕</div>
+    <div class="card" id="msg2">Whenever you hug a teddy, imagine it’s me hugging you tight 🧸🤗</div>
+    <div class="card" id="msg3">You make my world warmer, happier, and full of love 💖</div>
+
+    <div class="surprise" id="surpriseBox">
+        🎁 Surprise Hug Loaded… Sending virtual teddy hug to Mayu from Sagar 🤍🧸
     </div>
 </div>
 
 <audio id="bgMusic" loop>
-    <source src="love-song.mp3" type="audio/mpeg">
+    <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <button class="music-btn" onclick="startMusic()">Play Music 🎵</button>
@@ -125,30 +138,42 @@ function startMusic() {
     document.getElementById("bgMusic").play();
 }
 
-const message = "Mayu, this teddy is just a small gift, but my love for you is bigger than the sky and deeper than the ocean 🧸💖 Every time you hug a teddy, remember I am always there for you. Happy Teddy Day, my cutie! ❤️";
-let i = 0;
+/* Show messages one by one */
+setTimeout(() => document.getElementById("msg1").classList.add("show"), 800);
+setTimeout(() => document.getElementById("msg2").classList.add("show"), 2200);
+setTimeout(() => document.getElementById("msg3").classList.add("show"), 3600);
 
-function typeWriter() {
-    if (i < message.length) {
-        document.getElementById("typeText").innerHTML += message.charAt(i);
-        i++;
-        setTimeout(typeWriter, 45);
-    }
+/* Teddy click surprise */
+function showSurprise() {
+    document.getElementById("surpriseBox").style.display = "block";
+    createHeartsBurst();
 }
-typeWriter();
 
-/* Floating cute things */
+/* Floating hearts & teddies */
 function createFloat() {
-    const items = ["🧸","💖","🌸","💕"];
+    const items = ["🧸","💖","✨","💕"];
     let el = document.createElement("div");
     el.className = "float";
     el.innerHTML = items[Math.floor(Math.random() * items.length)];
     el.style.left = Math.random() * 100 + "vw";
-    el.style.fontSize = (18 + Math.random()*10) + "px";
+    el.style.fontSize = (18 + Math.random()*12) + "px";
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 7000);
 }
-setInterval(createFloat, 600);
+setInterval(createFloat, 700);
+
+/* Burst effect on teddy tap */
+function createHeartsBurst() {
+    for (let i = 0; i < 25; i++) {
+        let heart = document.createElement("div");
+        heart.className = "float";
+        heart.innerHTML = "💖";
+        heart.style.left = (45 + Math.random()*10) + "vw";
+        heart.style.fontSize = (20 + Math.random()*10) + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+    }
+}
 </script>
 
 </body>

@@ -1,125 +1,173 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>The Universe Chose Us</title>
-<style>
-body {
-  margin: 0;
-  overflow: hidden;
-  background: black;
-}
-canvas {
-  display: block;
-}
-.overlay {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 40%;
-  color: white;
-  font-family: Georgia, serif;
-  pointer-events: none;
-}
-.names {
-  font-size: 60px;
-  letter-spacing: 5px;
-  text-shadow: 0 0 30px red;
-  opacity: 0;
-  transition: opacity 3s ease;
-}
-.final {
-  position: absolute;
-  bottom: 50px;
-  width: 100%;
-  text-align: center;
-  font-size: 24px;
-  opacity: 0;
-  transition: opacity 3s ease;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Forever</title>
+    <style>
+        /* CSS STYLES */
+        :root {
+            --primary-red: #ff4d6d;
+            --soft-pink: #fff5f5;
+            --dark-pink: #c9184a;
+        }
+
+        body {
+            background-color: var(--soft-pink);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            color: #4a4a4a;
+        }
+
+        /* Floating Hearts Animation */
+        .heart-bg {
+            position: fixed;
+            top: -10vh;
+            left: 0;
+            width: 100%;
+            height: 110vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: var(--primary-red);
+            opacity: 0.3;
+            animation: float 6s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Container */
+        .card-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            z-index: 10;
+        }
+
+        h1 { color: var(--primary-red); margin-bottom: 0.5rem; }
+        
+        /* Counter Style */
+        #timer {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--dark-pink);
+            margin: 1rem 0;
+            padding: 10px;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Button & Message */
+        #reveal-btn {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            margin-top: 1rem;
+        }
+
+        #reveal-btn:hover {
+            background-color: var(--dark-pink);
+            transform: scale(1.05);
+        }
+
+        .hidden { display: none; }
+        
+        #secret-message {
+            margin-top: 20px;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
-<div class="overlay">
-  <div class="names" id="names">Sagar ❤️ Mayu</div>
-</div>
+    <div class="heart-bg" id="heart-bg"></div>
 
-<div class="final" id="final">
-The universe didn’t make a mistake. It made us.
-<br><br>
-❤️ Happy Valentine’s Day ❤️
-</div>
+    <div class="card-container">
+        <div style="font-size: 50px;">❤️</div>
+        <h1>To My Love</h1>
+        <p>Thinking of you every second...</p>
+        
+        <div id="timer">Loading our time together...</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
+        <button id="reveal-btn">Open Your Letter</button>
 
-let scene = new THREE.Scene();
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-let renderer = new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+        <div id="secret-message" class="hidden">
+            <hr style="border: 0; border-top: 1px solid #eee;">
+            <p><strong>Dearest [Name],</strong></p>
+            <p>Pushing this to GitHub is just a small way to say that my love for you is "committed" forever. I am so lucky to have you as my partner and I can't wait for our wedding day!</p>
+            <p style="color: var(--primary-red); font-weight: bold;">Happy Valentine's Day! 💍</p>
+        </div>
+    </div>
 
-camera.position.z = 60;
+    <script>
+        // 1. SET YOUR ANNIVERSARY DATE HERE (Year, Month - 1, Day)
+        // Example: Jan 1st, 2023 would be (2023, 0, 1)
+        const startDate = new Date(2023, 0, 1); 
 
-/* STAR FIELD */
-let starsGeometry = new THREE.BufferGeometry();
-let starCount = 4000;
-let positions = [];
+        // 2. Love Counter Logic
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
 
-for(let i=0; i<starCount; i++){
-    positions.push(
-        (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 400
-    );
-}
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / 1000 / 60) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
 
-starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            document.getElementById('timer').innerHTML = 
+                `${days} Days, ${hours}h, ${mins}m, ${secs}s`;
+        }
 
-let starsMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 0.7
-});
+        setInterval(updateTimer, 1000);
+        updateTimer();
 
-let starField = new THREE.Points(starsGeometry, starsMaterial);
-scene.add(starField);
+        // 3. Reveal Message Logic
+        document.getElementById('reveal-btn').addEventListener('click', function() {
+            document.getElementById('secret-message').classList.remove('hidden');
+            this.style.display = 'none';
+        });
 
-/* HEART PARTICLES */
-let heartShape = new THREE.Shape();
-
-heartShape.moveTo(0,0);
-heartShape.bezierCurveTo(0,5,-10,15,0,25);
-heartShape.bezierCurveTo(10,15,0,5,0,0);
-
-let heartGeometry = new THREE.ShapeGeometry(heartShape);
-let heartMaterial = new THREE.MeshBasicMaterial({color:0xff0000});
-let heart = new THREE.Mesh(heartGeometry, heartMaterial);
-
-heart.scale.set(0.8,0.8,0.8);
-heart.position.set(0,-5,0);
-scene.add(heart);
-
-/* ANIMATION */
-function animate() {
-    requestAnimationFrame(animate);
-
-    starField.rotation.y += 0.0008;
-    heart.rotation.y += 0.01;
-
-    renderer.render(scene, camera);
-}
-animate();
-
-/* TEXT TIMING */
-setTimeout(()=>{
-    document.getElementById("names").style.opacity = 1;
-}, 4000);
-
-setTimeout(()=>{
-    document.getElementById("final").style.opacity = 1;
-}, 8000);
-
-</script>
+        // 4. Create Floating Hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            document.getElementById('heart-bg').appendChild(heart);
+            
+            setTimeout(() => { heart.remove(); }, 6000);
+        }
+        setInterval(createHeart, 400);
+    </script>
 </body>
 </html>

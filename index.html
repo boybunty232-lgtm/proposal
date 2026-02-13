@@ -6,124 +6,120 @@
 <style>
 body {
   margin: 0;
-  background: radial-gradient(circle at center, #1a0000 0%, #000000 70%);
   overflow: hidden;
-  font-family: 'Georgia', serif;
-  color: white;
+  background: black;
 }
-
-/* STAR FIELD */
-.stars {
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  background: transparent;
-  animation: moveStars 60s linear infinite;
+canvas {
+  display: block;
 }
-
-.stars::after {
-  content: "";
+.overlay {
   position: absolute;
   width: 100%;
-  height: 100%;
-  background-image: radial-gradient(white 1px, transparent 1px);
-  background-size: 50px 50px;
-  opacity: 0.4;
-}
-
-@keyframes moveStars {
-  from { transform: translateY(0px); }
-  to { transform: translateY(-1000px); }
-}
-
-/* CENTER CONTAINER */
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   text-align: center;
+  top: 40%;
+  color: white;
+  font-family: Georgia, serif;
+  pointer-events: none;
 }
-
-/* HEART */
-.heart {
-  width: 120px;
-  height: 120px;
-  background: red;
-  position: relative;
-  transform: rotate(-45deg);
-  margin: 0 auto;
-  animation: pulse 2s infinite;
-  box-shadow: 0 0 40px red;
-}
-
-.heart:before,
-.heart:after {
-  content: "";
-  width: 120px;
-  height: 120px;
-  background: red;
-  border-radius: 50%;
-  position: absolute;
-}
-
-.heart:before {
-  top: -60px;
-  left: 0;
-}
-
-.heart:after {
-  left: 60px;
-  top: 0;
-}
-
-@keyframes pulse {
-  0% { transform: rotate(-45deg) scale(1); }
-  50% { transform: rotate(-45deg) scale(1.1); }
-  100% { transform: rotate(-45deg) scale(1); }
-}
-
-/* NAMES */
 .names {
-  font-size: 48px;
-  margin-top: 40px;
-  letter-spacing: 3px;
-  text-shadow: 0 0 20px red;
+  font-size: 60px;
+  letter-spacing: 5px;
+  text-shadow: 0 0 30px red;
   opacity: 0;
-  animation: fadeIn 4s ease forwards 3s;
+  transition: opacity 3s ease;
 }
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-/* FINAL MESSAGE */
 .final {
   position: absolute;
-  bottom: 60px;
+  bottom: 50px;
   width: 100%;
   text-align: center;
   font-size: 24px;
   opacity: 0;
-  animation: fadeIn 4s ease forwards 6s;
+  transition: opacity 3s ease;
 }
 </style>
 </head>
-
 <body>
 
-<div class="stars"></div>
-
-<div class="center">
-  <div class="heart"></div>
-  <div class="names">Sagar ❤️ Mayu</div>
+<div class="overlay">
+  <div class="names" id="names">Sagar ❤️ Mayu</div>
 </div>
 
-<div class="final">
-  The universe didn’t make a mistake. It made us.
-  <br><br>
-  ❤️ Happy Valentine’s Day ❤️
+<div class="final" id="final">
+The universe didn’t make a mistake. It made us.
+<br><br>
+❤️ Happy Valentine’s Day ❤️
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+let renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+camera.position.z = 60;
+
+/* STAR FIELD */
+let starsGeometry = new THREE.BufferGeometry();
+let starCount = 4000;
+let positions = [];
+
+for(let i=0; i<starCount; i++){
+    positions.push(
+        (Math.random() - 0.5) * 400,
+        (Math.random() - 0.5) * 400,
+        (Math.random() - 0.5) * 400
+    );
+}
+
+starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+
+let starsMaterial = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 0.7
+});
+
+let starField = new THREE.Points(starsGeometry, starsMaterial);
+scene.add(starField);
+
+/* HEART PARTICLES */
+let heartShape = new THREE.Shape();
+
+heartShape.moveTo(0,0);
+heartShape.bezierCurveTo(0,5,-10,15,0,25);
+heartShape.bezierCurveTo(10,15,0,5,0,0);
+
+let heartGeometry = new THREE.ShapeGeometry(heartShape);
+let heartMaterial = new THREE.MeshBasicMaterial({color:0xff0000});
+let heart = new THREE.Mesh(heartGeometry, heartMaterial);
+
+heart.scale.set(0.8,0.8,0.8);
+heart.position.set(0,-5,0);
+scene.add(heart);
+
+/* ANIMATION */
+function animate() {
+    requestAnimationFrame(animate);
+
+    starField.rotation.y += 0.0008;
+    heart.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
+}
+animate();
+
+/* TEXT TIMING */
+setTimeout(()=>{
+    document.getElementById("names").style.opacity = 1;
+}, 4000);
+
+setTimeout(()=>{
+    document.getElementById("final").style.opacity = 1;
+}, 8000);
+
+</script>
 </body>
 </html>

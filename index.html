@@ -1,276 +1,174 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sagar ❤️ Mayu | Valentine Ultra</title>
+<title>The Universe Chose Us</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
 body{
-    font-family:'Segoe UI',sans-serif;
-    background: radial-gradient(circle at center,#330000,#0a0000);
+    margin:0;
+    background:black;
+    overflow:hidden;
     color:white;
-    overflow-x:hidden;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* Animated background particles */
 canvas{
     position:fixed;
     top:0;
     left:0;
-    z-index:-1;
 }
 
-/* Intro */
-.intro{
-    position:fixed;
+.centerText{
+    position:absolute;
     width:100%;
-    height:100vh;
-    background:black;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    top:40%;
     text-align:center;
-    z-index:9999;
-    animation: fadeOut 3s forwards 4s;
-}
-
-.intro h1{
-    font-size:24px;
-    animation: glow 2s infinite alternate;
-}
-
-@keyframes fadeOut{
-    to{opacity:0;visibility:hidden;}
-}
-
-@keyframes glow{
-    from{text-shadow:0 0 10px red;}
-    to{text-shadow:0 0 30px #ff1a1a,0 0 60px red;}
-}
-
-/* Hero */
-.hero{
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-}
-
-.hero h2{
-    font-size:38px;
-    color:#ff3333;
-    text-shadow:0 0 25px red,0 0 60px darkred;
-    animation: heartbeat 1.5s infinite;
-}
-
-@keyframes heartbeat{
-    0%{transform:scale(1);}
-    25%{transform:scale(1.1);}
-    50%{transform:scale(1);}
-    75%{transform:scale(1.15);}
-    100%{transform:scale(1);}
-}
-
-.hero p{
-    margin-top:10px;
-    opacity:0.8;
-}
-
-/* Sections */
-.section{
-    padding:100px 20px;
-    text-align:center;
+    font-size:20px;
     opacity:0;
-    transform:translateY(40px);
-    transition:1s;
+    transition:2s;
 }
 
-.section.show{
-    opacity:1;
-    transform:translateY(0);
+.bigName{
+    font-size:36px;
+    color:#ff2b2b;
+    text-shadow:0 0 20px red, 0 0 50px red;
+    opacity:0;
+    transition:3s;
 }
 
-/* Typing effect */
-#typing{
-    margin-top:20px;
-    font-size:18px;
-    min-height:60px;
-}
-
-/* Heart Button */
-.heart-btn{
-    margin-top:40px;
-    padding:15px 25px;
-    background:#990000;
-    border:none;
-    border-radius:30px;
-    color:white;
-    font-size:16px;
-    box-shadow:0 0 20px red;
-}
-
-.big-heart{
-    font-size:100px;
-    margin-top:20px;
-    display:none;
-    animation: pulse 1s infinite alternate;
-}
-
-@keyframes pulse{
-    from{transform:scale(1);}
-    to{transform:scale(1.3);}
-}
-
-/* Final */
-.final{
-    padding:120px 20px;
+.finalLine{
+    position:absolute;
+    bottom:15%;
+    width:100%;
     text-align:center;
-    background:black;
+    font-size:18px;
+    opacity:0;
+    transition:3s;
 }
-
-.final h2{
-    font-size:30px;
-    color:#ff3333;
-    text-shadow:0 0 30px red;
-}
-
-/* Music button */
-.music{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    padding:10px 15px;
-    background:#660000;
-    color:white;
-    border:none;
-    border-radius:20px;
-}
-
 </style>
 </head>
 <body>
 
-<canvas id="particles"></canvas>
+<canvas id="space"></canvas>
 
-<div class="intro">
-    <h1>In a world full of people…<br>I found my forever in you ❤️</h1>
+<div class="centerText" id="text1">
+In 8,000,000,000 people...
 </div>
 
-<div class="hero">
-    <h2>Sagar ❤️ Mayu</h2>
-    <p>Happy Valentine’s Day My Love</p>
+<div class="centerText" id="text2">
+Two souls were searching...
 </div>
 
-<div class="section">
-    <h3>The Day I Met You…</h3>
-    <p>Something in my heart whispered… “She’s special.”</p>
+<div class="centerText bigName" id="loveText">
+Sagar ❤️ Mayu
 </div>
 
-<div class="section">
-    <h3>Your Smile…</h3>
-    <p>It became my peace, my happiness, my favorite view.</p>
+<div class="finalLine" id="finalText">
+The universe didn’t make a mistake.  
+It made us.  
+Happy Valentine’s Day ❤️
 </div>
-
-<div class="section">
-    <h3>What I Feel Today…</h3>
-    <div id="typing"></div>
-    <button class="heart-btn" onclick="showHeart()">Touch My Heart ❤️</button>
-    <div class="big-heart" id="bigHeart">❤️</div>
-</div>
-
-<div class="final">
-    <h2>Forever Yours,<br>Sagar ❤️</h2>
-</div>
-
-<audio id="music" loop>
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
-
-<button class="music" onclick="playMusic()">Play Music 🎵</button>
 
 <script>
+const canvas = document.getElementById("space");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-/* Scroll reveal */
-const sections=document.querySelectorAll(".section");
-window.addEventListener("scroll",()=>{
-    sections.forEach(sec=>{
-        const top=sec.getBoundingClientRect().top;
-        if(top<window.innerHeight-100){
-            sec.classList.add("show");
-        }
+/* Stars background */
+let stars = [];
+for(let i=0;i<200;i++){
+    stars.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*2
     });
-});
-
-/* Typing Effect */
-const text="I don’t just love you for today. I love you for every tomorrow. I choose you in every lifetime. You are my always, my forever, my Valentine ❤️";
-let i=0;
-function type(){
-    if(i<text.length){
-        document.getElementById("typing").innerHTML+=text.charAt(i);
-        i++;
-        setTimeout(type,40);
-    }
-}
-setTimeout(type,2000);
-
-/* Heart interaction */
-function showHeart(){
-    document.getElementById("bigHeart").style.display="block";
-    fireworks();
 }
 
-/* Fireworks effect */
-function fireworks(){
-    for(let i=0;i<40;i++){
-        let spark=document.createElement("div");
-        spark.style.position="fixed";
-        spark.style.left="50%";
-        spark.style.top="50%";
-        spark.style.color="red";
-        spark.innerHTML="✨";
-        document.body.appendChild(spark);
-        let x=(Math.random()-0.5)*600;
-        let y=(Math.random()-0.5)*600;
-        spark.animate([
-            {transform:"translate(0,0)",opacity:1},
-            {transform:`translate(${x}px,${y}px)`,opacity:0}
-        ],{duration:1000});
-        setTimeout(()=>spark.remove(),1000);
-    }
-}
-
-/* Music */
-function playMusic(){
-    document.getElementById("music").play();
-}
-
-/* Background particles */
-const canvas=document.getElementById("particles");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-let particles=[];
-for(let i=0;i<100;i++){
-    particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2});
-}
-function animate(){
+function animateStars(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle="rgba(255,0,0,0.6)";
-    particles.forEach(p=>{
+    ctx.fillStyle="white";
+    stars.forEach(s=>{
         ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
         ctx.fill();
-        p.y+=0.5;
-        if(p.y>canvas.height) p.y=0;
+        s.y += 0.3;
+        if(s.y>canvas.height) s.y=0;
     });
-    requestAnimationFrame(animate);
+    requestAnimationFrame(animateStars);
 }
-animate();
+animateStars();
+
+/* Two destiny stars */
+let star1 = {x:100, y:canvas.height/2};
+let star2 = {x:canvas.width-100, y:canvas.height/2};
+
+function moveStars(){
+    ctx.beginPath();
+    ctx.fillStyle="white";
+    ctx.arc(star1.x, star1.y, 4, 0, Math.PI*2);
+    ctx.arc(star2.x, star2.y, 4, 0, Math.PI*2);
+    ctx.fill();
+
+    if(star1.x < canvas.width/2){
+        star1.x += 1.5;
+        star2.x -= 1.5;
+        requestAnimationFrame(moveStars);
+    } else {
+        explode();
+    }
+}
+
+/* Explosion */
+function explode(){
+    for(let i=0;i<100;i++){
+        let angle = Math.random()*Math.PI*2;
+        let speed = Math.random()*4;
+        let particle = {
+            x:canvas.width/2,
+            y:canvas.height/2,
+            dx:Math.cos(angle)*speed,
+            dy:Math.sin(angle)*speed,
+            life:100
+        };
+        particles.push(particle);
+    }
+
+    setTimeout(()=>{
+        document.getElementById("loveText").style.opacity=1;
+        setTimeout(()=>{
+            document.getElementById("finalText").style.opacity=1;
+        },2000);
+    },1500);
+}
+
+let particles=[];
+function animateParticles(){
+    particles.forEach(p=>{
+        ctx.fillStyle="red";
+        ctx.fillRect(p.x,p.y,2,2);
+        p.x+=p.dx;
+        p.y+=p.dy;
+        p.life--;
+    });
+    particles = particles.filter(p=>p.life>0);
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* Story timing */
+setTimeout(()=>{
+    document.getElementById("text1").style.opacity=1;
+},1500);
+
+setTimeout(()=>{
+    document.getElementById("text2").style.opacity=1;
+},4000);
+
+setTimeout(()=>{
+    moveStars();
+},6000);
 
 </script>
 
